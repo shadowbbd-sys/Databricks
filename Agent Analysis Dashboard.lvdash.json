@@ -1,0 +1,236 @@
+{
+  "datasets": [
+    {
+      "name": "25cf0c74",
+      "displayName": "Insurance Agents",
+      "queryLines": [
+        "SELECT e.AGENT_NAME,i.TXN_DATE_TIME,i.TRANSACTION_ID,i.CUSTOMER_ID,i.CLAIM_AMOUNT,i.AGE,i.INSURANCE_TYPE,i.report_dt\r\n",
+        "FROM insurance AS i\r\n",
+        "INNER JOIN employee AS e\r\n",
+        "ON i.agent_id = e.agent_id\r\n",
+        "WHERE e.agent_name LIKE CONCAT ('%', :parameter , '%')"
+      ],
+      "parameters": [
+        {
+          "displayName": "agentName",
+          "keyword": "parameter",
+          "dataType": "STRING",
+          "defaultSelection": {}
+        }
+      ]
+    }
+  ],
+  "pages": [
+    {
+      "name": "1f29e448",
+      "displayName": "Untitled page",
+      "layout": [
+        {
+          "widget": {
+            "name": "73a3c198",
+            "multilineTextboxSpec": {
+              "lines": [
+                "<span style=\"font-family: Tahoma;font-size: 24px;\">Agent-level Insurance Claims Analysis</span>"
+              ]
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 3,
+            "height": 1
+          }
+        },
+        {
+          "widget": {
+            "name": "fe7a4f36",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "25cf0c74",
+                  "fields": [
+                    {
+                      "name": "sum(CLAIM_AMOUNT)",
+                      "expression": "SUM(`CLAIM_AMOUNT`)"
+                    },
+                    {
+                      "name": "INSURANCE_TYPE",
+                      "expression": "`INSURANCE_TYPE`"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "sum(CLAIM_AMOUNT)",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "y": {
+                  "fieldName": "INSURANCE_TYPE",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 1,
+            "width": 3,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "01be1147",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "25cf0c74",
+                  "fields": [
+                    {
+                      "name": "bin(AGE, binWidth=5)",
+                      "expression": "BIN_FLOOR(`AGE`, 5)"
+                    },
+                    {
+                      "name": "count(*)",
+                      "expression": "COUNT(`*`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "histogram",
+              "encodings": {
+                "x": {
+                  "fieldName": "bin(AGE, binWidth=5)",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "y": {
+                  "fieldName": "count(*)",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 3,
+            "y": 1,
+            "width": 3,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "9cd3b079",
+            "queries": [
+              {
+                "name": "dashboards/01f0cd271c871a5e848ae5c849a9d6cb/datasets/01f0cd272cb81f6c9fb0dd3c26b1144e_report_dt",
+                "query": {
+                  "datasetName": "25cf0c74",
+                  "fields": [
+                    {
+                      "name": "report_dt",
+                      "expression": "`report_dt`"
+                    },
+                    {
+                      "name": "report_dt_associativity",
+                      "expression": "COUNT_IF(`associative_filter_predicate_group`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "widgetType": "filter-date-range-picker",
+              "encodings": {
+                "fields": [
+                  {
+                    "fieldName": "report_dt",
+                    "queryName": "dashboards/01f0cd271c871a5e848ae5c849a9d6cb/datasets/01f0cd272cb81f6c9fb0dd3c26b1144e_report_dt"
+                  }
+                ]
+              },
+              "frame": {
+                "showTitle": true
+              }
+            }
+          },
+          "position": {
+            "x": 3,
+            "y": 0,
+            "width": 1,
+            "height": 1
+          }
+        },
+        {
+          "widget": {
+            "name": "d30222f9",
+            "queries": [
+              {
+                "name": "parameter_dashboards/01f0cd271c871a5e848ae5c849a9d6cb/datasets/01f0cd272cb81f6c9fb0dd3c26b1144e_parameter",
+                "query": {
+                  "datasetName": "25cf0c74",
+                  "parameters": [
+                    {
+                      "name": "parameter",
+                      "keyword": "parameter"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "widgetType": "filter-single-select",
+              "encodings": {
+                "fields": [
+                  {
+                    "parameterName": "parameter",
+                    "queryName": "parameter_dashboards/01f0cd271c871a5e848ae5c849a9d6cb/datasets/01f0cd272cb81f6c9fb0dd3c26b1144e_parameter"
+                  }
+                ]
+              },
+              "frame": {
+                "showTitle": true
+              }
+            }
+          },
+          "position": {
+            "x": 4,
+            "y": 0,
+            "width": 2,
+            "height": 1
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_CANVAS"
+    }
+  ],
+  "uiSettings": {
+    "theme": {
+      "widgetHeaderAlignment": "ALIGNMENT_UNSPECIFIED"
+    },
+    "applyModeEnabled": false
+  }
+}
